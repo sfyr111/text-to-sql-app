@@ -1,20 +1,22 @@
 import { NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { sql } from '@/lib/db';
+
+export const runtime = 'edge';
 
 export async function POST(req: Request) {
   try {
-    const { sql } = await req.json();
+    const { sql: sqlQuery } = await req.json();
     
     // 只允许 SELECT 语句
-    if (!sql.trim().toLowerCase().startsWith('select')) {
+    if (!sqlQuery.trim().toLowerCase().startsWith('select')) {
       return NextResponse.json(
         { error: 'Only SELECT queries are allowed' },
         { status: 400 }
       );
     }
 
-    const results = db.prepare(sql).all();
-    return NextResponse.json({ results });
+    const result = await sql(sqlQuery);
+    return NextResponse.json({ results: result });
   } catch (error) {
     console.error('SQL execution error:', error);
     return NextResponse.json(
@@ -22,4 +24,16 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+}
+
+// 添加 OPTIONS 方法支持
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
 } 

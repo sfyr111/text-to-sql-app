@@ -7,6 +7,28 @@ const openai = new OpenAI({
 
 export const runtime = 'edge';
 
+const SYSTEM_PROMPT = `You are an expert SQL developer. Convert the following natural language into a SQL query. Only return the SQL query without any explanation or markdown formatting.
+
+Available database tables and their structures:
+
+1. users table:
+   - id: SERIAL PRIMARY KEY
+   - name: TEXT NOT NULL
+   - email: TEXT UNIQUE NOT NULL
+   - created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+2. orders table:
+   - id: SERIAL PRIMARY KEY
+   - user_id: INTEGER REFERENCES users(id)
+   - amount: DECIMAL(10,2)
+   - created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+Example relationships:
+- Each user can have multiple orders
+- orders.user_id references users.id
+
+Please generate SQL queries according to these table structures.`;
+
 // 清理 SQL 查询中的 Markdown 标记
 function cleanSqlQuery(sql: string): string {
   return sql
@@ -27,7 +49,7 @@ export async function POST(req: Request) {
       messages: [
         {
           role: 'system',
-          content: 'You are an expert SQL developer. Convert the following natural language into a SQL query. Only return the SQL query without any explanation or markdown formatting.',
+          content: SYSTEM_PROMPT,
         },
         {
           role: 'user',
