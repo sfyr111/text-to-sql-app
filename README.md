@@ -12,6 +12,33 @@ A modern web application that converts natural language queries into SQL stateme
 - 🎨 Modern UI with Shadcn components
 - 🌐 Easy deployment to Vercel
 
+## Example Queries
+
+Here are some example natural language queries you can try:
+
+### Basic Queries
+- "Show me all users' names and emails"
+- "List all orders with amounts"
+- "Display the total number of users"
+
+### Filtering
+- "Find users who made orders above $100"
+- "Show orders placed in the last month"
+- "List users who have made more than 2 orders"
+
+### Aggregations
+- "Calculate the total order amount for each user"
+- "Show me the average order amount"
+- "Find the user who made the largest order"
+
+### Joins and Complex Queries
+- "Show me users and their total spending"
+- "List users who haven't made any orders"
+- "Find the most recent order for each user"
+- "Show users who have spent more than average"
+
+Each query will be converted into the appropriate SQL statement and executed against the sample database.
+
 ## Getting Started
 
 ### Prerequisites
